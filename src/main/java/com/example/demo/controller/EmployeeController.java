@@ -1,10 +1,13 @@
 package com.example.demo.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,6 +55,17 @@ public class EmployeeController {
 		Employee updatedEmployee = repository.save(employee);
 		
 		return ResponseEntity.ok(updatedEmployee);
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Map<String,Boolean>> deleteEmployee (@PathVariable Long id) {
+		Employee employee = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No employee with id: " + id));
+		
+		repository.delete(employee);
+		Map<String,Boolean> response = new HashMap<>();
+		response.put("deleted", Boolean.TRUE);
+		
+		return ResponseEntity.ok(response);
 	}
 	
 }
